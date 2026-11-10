@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐉NEXUS</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+  <div class="sidebar">
+    <nav>
+      <ul type="none">
+        <li>
+          <img src="user/img/Logo fantasy ma thuậ.png">
+        </li>
+        <li>
+          <a href="#side1">Home</a>
+        </li>
+        <li>
+          <a href="#side2">World</a>
+        </li>
+        <li>
+          <a href="#side3">News</a>
+        </li>
+        <li>
+          <a href="#side4">Contact</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="account">
+
+      <button id="amthanh" class="sound-btn">🔊</button>
+
+      <div class="dragon-container">
+        <span class="dragon-icon">🐉</span>
+        <ul class="dropdown-menu" id="dragonMenu">
+          <li class="dropdown-header">👑 QUẢN LÝ TÀI KHOẢN</li>
+          <li>
+            <a href="user/html/dnuser.html" title="Đăng nhập game">
+              🚪 Đăng nhập User
+            </a>
+          </li>
+          <li>
+            <a href="admin/html/LOGIN.html" title="Vào admin">
+              🛡️ Đăng nhập Admin
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="showForm()" title="Tạo user mới">
+              📝 Đăng ký User
+            </a>
+          </li>
+          <li class="dropdown-footer">Chọn để tiếp tục...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide1" id="side1">
+    <video autoplay muted loop id="bg-video">
+      <source src="user/img/Gen4.mp4" type="video/mp4">
+    </video>
+    <audio id="bg-music" loop>
+      <source src="./user/img/Breath_of_the_Sovereign.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+      const music = document.getElementById("bg-music");
+      const buttonamthanh = document.getElementById("amthanh");
+      let On_off= true;
+      amthanh.addEventListener("click", function () {
+        if (On_off === true) {
+          music.pause();
+          buttonamthanh.textContent = "🔇";
+          On_off = false;
+        } else {
+          music.play();
+          buttonamthanh.textContent = "🔊";
+          On_off = true;
+        }
+      });
+    </script>
+    <div class="dangky">
+      <button id="dangnhap" class="nutgame" onclick="showForm()">
+        ĐĂNG KÝ
+      </button>
+    </div>
+    <div id="Modal" class="modal1">
+      <div class="modal2">
+        <div class="modal-header">
+          <h2>🧙‍♂️ ĐĂNG KÝ TÀI KHOẢN</h2>
+          <span id="close" class="close" onclick="tatForm()">×</span>
+        </div>
+
+        <form id="Form" class="classForm" autocomplete="off">
+          <div class="input-group">
+            <label>👤 Tên nhân vật</label>
+            <input type="text" id="username" placeholder="Nhập tên chiến binh..." required>
+          </div>
+          <div class="input-group">
+            <label>📧 Email</label>
+            <input type="email" id="email" placeholder="dragon@fantasy.com" required>
+          </div>
+          <div class="input-group">
+            <label>🔒 Mật khẩu</label>
+            <input type="password" id="password" placeholder="Tối thiểu 6 ký tự" minlength="6" required>
+          </div>
+          <div class="input-group">
+            <label>🔄 Xác nhận mật khẩu</label>
+            <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+          </div>
+          <button type="submit" class="classSubmit">⚔️ TẠO TÀI KHOẢN</button>
+        </form>
+        <div class="modalFooter">
+          <p>Đã có tài khoản? <a href="#" onclick="showLoginForm()">Đăng nhập</a></p>
+        </div>
+      </div>
+    </div>
+    <script>
+      function showForm() {
+        document.getElementById('Modal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function tatForm() {
+        document.getElementById('Modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+
+      window.onclick = function (event) {
+        if (event.target.id === 'close') tatForm();
+      }
+
+
+      document.getElementById('Form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const ten = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const mk = document.getElementById('password').value;
+        const xacNhan = document.getElementById('confirmPassword').value;
+
+        if (mk !== xacNhan) {
+          alert('❌ Mật khẩu không khớp!');
+          return;
+        }
+        if (mk.length < 6) {
+          alert('❌ Mật khẩu ≥ 6 ký tự!');
+          return;
+        }
+
+        alert(`🎉 Thành công!\n👤 ${ten}\n📧 ${email}`);
+        tatForm();
+      });
+
+      function showLoginForm() {
+        alert('Đăng nhập sẽ thêm sau!');
+      }
+
+      document.getElementById('Form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const userData = {
+          id: Date.now(), 
+          ten: document.getElementById('username').value,
+          email: document.getElementById('email').value,
+          matkhau: document.getElementById('password').value,
+          ngayTao: new Date().toLocaleString('vi-VN'),
+          trangThai: 'Chưa kích hoạt'
+        };
+
+
+        let users = JSON.parse(localStorage.getItem('usersFantasy')) || [];
+        users.push(userData);
+
+        localStorage.setItem('usersFantasy', JSON.stringify(users));
+
+        alert(`🎉 Đăng ký thành công ${userData.ten}!\n📧 ${userData.email}\n✅ Đã lưu vào hệ thống!`);
+        tatForm();
+      });
+    </script>
+  </div>
+  <div class="side2" id="side2">
+    <div class="container_side2">
+      <div class="top-content">
+        <div class="img_world" onclick="show_content(1)"><img src="user/img/sinhvat.png"></div>
+        <div class="img_world" onclick="show_content(2)"><img src="user/img/Băng Nguyên Tĩnh Lặng.png"></div>
+        <div class="img_world" onclick="show_content(3)"><img src="user/img/cungdien.png"></div>
+        <div class="img_world" onclick="show_content(4)"><img src="user/img/ho.png"></div>
+      </div>
+      <div class="mid-content">
+        <div class="img_world" onclick="show_content(5)"><img src="user/img/gio.png"></div>
+        <div id="content_side2">thong tin</div>
+        <div class="img_world" onclick="show_content(6)"><img src="user/img/tinhthe.png"></div>
+      </div>
+      <div class="bot-content">
+        <div class="img_world" onclick="show_content(7)"><img src="user/img/rong.png"></div>
+        <div class="img_world" onclick="show_content(8)"><img src="user/img/cucquang.png"></div>
+        <div class="img_world" onclick="show_content(9)"><img src="user/img/thanhtri.png"></div>
+        <div class="img_world" onclick="show_content(10)"><img src="user/img/cong.png"></div>
+      </div>
+    </div>
+    <script>
+      // Dữ liệu thông tin cho từng hình ảnh
+      const worldData = {
+        1: {
+          title: "🧙‍♂️ Ba Sinh Vật Huyền Thoại",
+          description: "Ba sinh vật cổ xưa từ thế giới fantasy, mỗi con mang một sức mạnh bí ẩn. Chúng là những người bảo vệ cổ xưa của vương quốc phép thuật."
+        },
+        2: {
+          title: "❄️ Băng Nguyên Tĩnh Lặng",
+          description: "Vùng đất băng giá nơi thời gian dường như ngừng trôi. Những bông tuyết lấp lánh che phủ những bí mật cổ xưa chưa được khám phá."
+        },
+        3: {
+          title: "🌨️ Cung Điện Băng Vĩnh Cửu",
+          description: "Nơi ở của Nữ Hoàng Băng Giá, được xây dựng từ pha lê băng tinh khiết. Chỉ những kẻ xứng đáng mới có thể bước qua cánh cổng băng."
+        },
+        4: {
+          title: "🧊 Hồ Băng Huyền Bí",
+          description: "Hồ nước đóng băng phản chiếu những hình ảnh từ quá khứ. Người ta đồn rằng có thể nhìn thấy tương lai trong những vết nứt trên mặt băng."
+        },
+        5: {
+          title: "🌬️ Gió Băng Vĩnh Cửu",
+          description: "Những cơn gió lạnh buốt mang theo lời thì thầm của các linh hồn cổ xưa. Chỉ những chiến binh dũng cảm mới có thể đối mặt."
+        },
+        6: {
+          title: "💎 Pha Lê Băng Rực Rỡ",
+          description: "Những viên pha lê băng quý hiếm phát ra ánh sáng ma thuật. Chúng là nguồn năng lượng cho phép thuật băng của vùng đất này."
+        },
+        7: {
+          title: "🐉 Rồng Băng Cổ Đại",
+          description: "Vị vua của băng nguyên, sinh vật hùng mạnh nhất vùng đất này. Hơi thở của nó có thể đóng băng cả một đội quân trong tích tắc."
+        },
+        8: {
+          title: "🌟 Ánh Sáng Bắc Cực",
+          description: "Hiện tượng thiên nhiên kỳ diệu xuất hiện vào những đêm trăng tròn, báo hiệu sự xuất hiện của các vị thần băng."
+        },
+        9: {
+          title: "🏰 Thành Trì Băng Giá",
+          description: "Pháo đài bất khả xâm phạm được bảo vệ bởi bão tuyết vĩnh cửu. Nơi hội tụ của các chiến binh băng giá."
+        },
+        10: {
+          title: "🌌 Cổng Không Gian Băng",
+          description: "Cánh cổng dẫn đến những chiều không gian khác, chỉ mở ra khi sao băng băng rơi xuống vùng đất này."
+        }
+      };
+
+      // Hàm hiển thị nội dung
+      function show_content(id) {
+        const content = document.getElementById('content_side2');
+        const data = worldData[id];
+
+        if (data) {
+          content.innerHTML = `
+          <h2>${data.title}</h2>
+          <p>${data.description}</p>
+        `;
+          content.classList.remove('default');
+        }
+        document.querySelectorAll('.img_world').forEach(img => {
+          img.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        const music = document.getElementById('bg-music');
+        document.addEventListener('click', function () {
+          music.play().catch(e => console.log('Autoplay prevented'));
+        }, { once: true });
+      });
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    </script>
+  </div>
+  <div class="side3" id="side3">
+    <div class="container_side3">
+      <div class="content_left_side3">
+        <legend>📰 NEWS</legend>
+        <div class="main_content_new">
+          🔥 <strong>Cập nhật lớn v2.1:</strong> Thêm 5 sinh vật mới và hệ thống chiến đấu PvP thời gian thực!
+        </div>
+        <div class="main_content_new">
+          🐉 <strong>Sự kiện Rồng Băng:</strong> Nhận ngay skin Rồng Băng Cổ Đại khi tham gia event trong 7 ngày tới!
+        </div>
+        <div class="main_content_new">
+          ❄️ <strong>Băng Nguyên mở rộng:</strong> Khám phá 3 khu vực mới với boss siêu khó và phần thưởng khủng!
+        </div>
+      </div>
+      <div class="container_right_side3">
+        <div class="container-right-side3-top">
+          <img src="user/img/Logo fantasy ngang n.png" alt="Game Logo">
+        </div>
+        <div class="capnhat">
+          <h3>📢 Cập nhật từ Developer</h3>
+          <div class="update_item">
+            <div class="update-date">[2024-01-15]</div>
+            <div>✅ Fix lỗi crash khi summon Rồng Băng<br>🎨 Cải thiện hiệu ứng ánh sáng</div>
+          </div>
+          <div class="update_item">
+            <div class="update-date">[2024-01-14]</div>
+            <div>🔥 Thêm skill mới "Bão Tuyết Vĩnh Cửu"<br>⚡ Tối ưu FPS trên mobile</div>
+          </div>
+          <div class="update_item">
+            <div class="update-date">[2024-01-13]</div>
+            <div>🌟 Server mới SEA mở cửa<br>💎 Giftcode đầu năm: FANTASY2024</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div class="side4" id="side4">
+  <div class="container_side4">
+   
+    <div id="videoModal" class="video-modal">
+      <div class="video-modal-content">
+        <span class="video-close" onclick="closeVideoModal()">×</span>
+        <video id="fullscreenVideo" controls>
+          <source src="" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+  
+    <div class="container_video_side4">
+   <div class="videodemo">
+    <video controls preload="metadata">
+        <source src="user/img/bg.mp4" type="video/mp4">
+    </video>
+</div>
+
+<div class="videodemo">
+    <video controls preload="metadata">
+        <source src="user/img/bg.mp4" type="video/mp4">
+    </video>
+</div>
+
+<div class="videodemo">
+    <video controls preload="metadata">
+         <source src="user/img/bg.mp4" type="video/mp4">
+    </video>
+</div>
+    </div>
+
+  
+    <footer>
+      <div class="footer_top">
+        <div class="logo_left">
+          <img src="user/img/Logo fantasy ngang n.png" alt="Logo">
+        </div>
+        <div class="contact">
+          <div class="logo_mxh fb" title="Facebook">📘</div>
+          <div class="logo_mxh yt" title="YouTube">📺</div>
+          <div class="logo_mxh tw" title="Twitter">🐦</div>
+          <div class="logo_mxh dc" title="Discord">💬</div>
+        </div>
+      </div>
+      <div class="footer_bot">
+        © 2024 Fantasy World. All rights reserved. | 
+        <span style="color: #00d4ff;">FANTASY2024</span> - Giftcode đầu năm
+      </div>
+    </footer>
+  </div>
+</div>
+  <script>
+  
+    document.getElementById('Form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const userData = {
+        id: Date.now(), // ID UNIQUE
+        ten: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        matkhau: document.getElementById('password').value,
+        ngayTao: new Date().toLocaleString('vi-VN'),
+        trangThai: 'Chưa kích hoạt'
+      };
+
+      let users = JSON.parse(localStorage.getItem('usersFantasy')) || [];
+      users.push(userData);
+
+      // LUU VAO LOCALSTORAGE
+      localStorage.setItem('usersFantasy', JSON.stringify(users));
+
+      alert(`🎉 Đăng ký thành công ${userData.ten}!\n📧 ${userData.email}\n✅ Đã lưu vào hệ thống!`);
+      tatForm();
+
+    });
+
+  </script>
+</body>
+
+</html>

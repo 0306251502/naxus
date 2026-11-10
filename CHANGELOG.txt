@@ -1,0 +1,83 @@
+NEXUS – FANTASY GAME WEBSITE TEMPLATE
+CHANGELOG
+
+==================================================
+[1.0.0] – Initial Release
+=========================
+
+Initial version of NEXUS Fantasy Game Website Template.
+
+Added:
+
+* Fantasy themed landing page.
+* Home / World / News / Contact navigation.
+* Fantasy video background.
+* Background music control.
+* User registration interface.
+* User login interface.
+* User game dashboard.
+* User level display.
+* User points display.
+* User wins display.
+* User rank display.
+* Quest section.
+* Tournament section.
+* Shop section.
+* User logout.
+* Admin login interface.
+* Admin registration request interface.
+* Master Admin approval interface.
+* Admin dashboard.
+* User management interface.
+* User activation / deactivation.
+* User deletion.
+* Admin statistics.
+* LocalStorage based demo data system.
+* Responsive layout for supported pages.
+* Fantasy themed visual design and assets.
+
+==================================================
+NOTES FOR VERSION 1.0.0
+=======================
+
+This release is a front-end/demo template.
+
+The authentication and account management features currently
+use browser-side JavaScript and LocalStorage.
+
+This release does not include:
+
+* Production backend.
+* Server-side authentication.
+* Database server.
+* API server.
+* Secure password hashing.
+* Production-grade access control.
+
+==================================================
+PLANNED / POSSIBLE FUTURE UPDATES
+=================================
+
+Possible future improvements may include:
+
+* Backend API integration.
+* Database integration.
+* Secure authentication.
+* Improved admin permissions.
+* Real game backend.
+* Improved responsive design.
+* Additional Fantasy pages.
+* More dashboard modules.
+* Theme customization options.
+
+==================================================
+END OF CHANGELOG
+================
+
+
+2.0.0 - AN consent-based security lab
+- Replaced automatic invasive collection with explicit consent-based session diagnostics.
+- GPS is requested only after a separate user action and browser permission.
+- Added AN shortcut to Master dashboard.
+- Added responsive visual refinements to the landing page.
+- Reminder: LocalStorage is browser-local; remote multi-user monitoring requires a backend, authentication, access controls and retention policy.

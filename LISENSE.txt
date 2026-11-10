@@ -1,0 +1,145 @@
+NEXUS – FANTASY GAME WEBSITE TEMPLATE
+LICENSE
+Version 1.0
+
+Copyright (c) 2026
+NEXUS Template
+
+==================================================
+
+1. LICENSE GRANT
+   ==================================================
+
+Subject to the terms of this license, the purchaser is granted a
+non-exclusive, non-transferable license to use and modify the
+NEXUS template for their own project.
+
+The purchaser may:
+
+* Use the template for a personal project.
+* Use the template for a commercial end product.
+* Modify the HTML, CSS and JavaScript code.
+* Modify colors, layouts and visual elements.
+* Replace images, audio, video, fonts and other assets.
+* Customize the template for a client project.
+
+==================================================
+2. RESTRICTIONS
+===============
+
+The purchaser may NOT:
+
+* Resell the original template as a standalone template.
+* Redistribute the original source files as a competing template.
+* Upload the original template to another marketplace as a new
+  template without permission.
+* Claim ownership of third-party assets.
+* Sell or redistribute third-party assets separately when their
+  licenses do not permit such redistribution.
+* Remove applicable copyright or license notices required by
+  third-party resources.
+
+==================================================
+3. COMMERCIAL USE
+=================
+
+The purchaser may use the modified template in a commercial
+website, application or other end product.
+
+The purchaser is responsible for:
+
+* The final content of their project.
+* Their own branding and trademarks.
+* Their own legal compliance.
+* Their own backend and security implementation.
+* Obtaining any required licenses for external resources.
+
+==================================================
+4. THIRD-PARTY RESOURCES
+========================
+
+This package may reference or include third-party resources such as:
+
+* Google Fonts
+* Font Awesome
+* Images
+* Audio
+* Video
+* Other external libraries or resources
+
+Third-party resources are NOT automatically transferred to the
+purchaser under this license.
+
+Each third-party resource remains subject to its own license,
+terms and copyright.
+
+The purchaser is responsible for reviewing the applicable
+third-party licenses before commercial deployment.
+
+==================================================
+5. SOURCE CODE
+==============
+
+The HTML, CSS and JavaScript source code of the NEXUS template may
+be modified by the purchaser for their permitted end project.
+
+This license does not grant ownership of the original source code
+or any intellectual property belonging to the author.
+
+==================================================
+6. NO WARRANTY
+==============
+
+The template is provided "AS IS", without warranties of any kind,
+to the maximum extent permitted by applicable law.
+
+The author does not guarantee that the template will:
+
+* Work in every browser or environment.
+* Be compatible with every server configuration.
+* Satisfy every security requirement.
+* Satisfy the requirements of a particular commercial project.
+* Be suitable for production use without additional development.
+
+==================================================
+7. LIMITATION OF RESPONSIBILITY
+===============================
+
+The author is not responsible for losses, damages, data loss,
+security incidents, business interruption or other consequences
+resulting from modifications or use of the template by the buyer,
+to the maximum extent permitted by applicable law.
+
+==================================================
+8. AUTHOR RIGHTS
+================
+
+The original author retains ownership of the original NEXUS
+template and its original source code, except for third-party
+materials that are subject to their own licenses.
+
+Purchase of the template does not transfer copyright ownership.
+
+==================================================
+9. LICENSE TERMINATION
+======================
+
+This license terminates automatically if the purchaser violates
+the restrictions stated in this agreement.
+
+Upon termination, the purchaser must stop redistributing the
+template as a standalone product.
+
+==================================================
+10. IMPORTANT
+=============
+
+This license applies only to the NEXUS template itself.
+
+Third-party resources are governed by their own licenses.
+
+This document does not replace professional legal advice.
+
+==================================================
+END OF LICENSE
+==============
