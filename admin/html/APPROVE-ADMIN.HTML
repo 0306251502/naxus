@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 MASTER PANEL - Phê duyệt Admin Fantasy Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/aprove-admin.css">
+  
+</head>
+<body>
+    <div class="security-overlay" id="securityOverlay">
+        <div class="lock-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="master-code">MASTER PANEL</div>
+        <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.8;">Nhập mã chủ game để mở</p>
+        <input type="password" class="code-input" id="masterCode" placeholder="PASSWORLD" maxlength="20" autocomplete="off">
+        <button class="unlock-btn" onclick="unlockMasterPanel()">
+            <i class="fas fa-unlock"></i> Mở Panel
+        </button>
+        <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">Chỉ chủ game mới có quyền truy cập</p>
+    </div>
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <h1><i class="fas fa-crown"></i> MASTER ADMIN PANEL</h1>
+            <p>Quản lý tất cả yêu cầu làm Admin Fantasy Game</p>
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div>Total Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingCount" style="color: #ff9800;">0</div>
+                <div>Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="approvedCount" style="color: #4caf50;">0</div>
+                <div>Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="rejectedCount" style="color: #f44336;">0</div>
+                <div>Rejected</div>
+            </div>
+        </div>
+        <div class="requests-grid" id="requestsGrid"></div>
+    </div>
+    <div class="detail-modal" id="detailModal">
+        <div class="detail-content">
+            <span class="close-detail" onclick="closeDetailModal()">&times;</span>
+            <div class="detail-header">
+                <h2><i class="fas fa-user-secret"></i> THÔNG TIN CHI TIẾT</h2>
+            </div>
+            <div id="detailContent"></div>
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn-detail" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i> ĐÓNG
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MASTER_CODE = "ADMINMASTER";//=======> pass: ADMINMASTER
+        let allRequests = [];
+        let currentDetailId = null;
+        function unlockMasterPanel() {
+            const input = document.getElementById('masterCode');
+            if (input.value === MASTER_CODE) {
+                document.getElementById('securityOverlay').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadRequests();
+            } else {
+                input.style.borderColor = '#f44336';
+                input.style.boxShadow = '0 0 20px rgba(244,67,54,0.5)';
+                setTimeout(() => {
+                    input.style.borderColor = 'rgba(255,255,255,0.3)';
+                    input.style.boxShadow = 'none';
+                }, 1000);
+                input.value = '';
+            }
+        }
+        document.getElementById('masterCode').addEventListener('keypress', (e) => e.key === 'Enter' && unlockMasterPanel());
+        function loadRequests() {
+            allRequests = JSON.parse(localStorage.getItem('adminRequests') || '[]');
+            renderRequests();
+            updateStats();
+        }
+        function updateStats() {
+            const total = allRequests.length;
+            const pending = allRequests.filter(r => r.status === 'pending').length;
+            const approved = allRequests.filter(r => r.status === 'approved').length;
+            const rejected = allRequests.filter(r => r.status === 'rejected').length;
+
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('rejectedCount').textContent = rejected;
+        }
+        function showDetail(id) {
+            const request = allRequests.find(r => r.id == id);
+            if (!request) return;
+
+            currentDetailId = id;
+            const content = document.getElementById('detailContent');
+            
+            content.innerHTML = `
+                <div class="detail-info">
+                    <div class="detail-item">
+                        <strong>👤 Họ tên</strong>
+                        ${request.fullname || 'Chưa có'}
+                    </div>
+                    <div class="detail-item">
+                        <strong>🆔 CCCD</strong>
+                        ${request.cccd || 'Chưa có'}
+                    </div>
+                    <div class="detail-item">
+                        <strong>📱 SĐT</strong>
+                        ${request.phone || 'Chưa có'}
+                    </div>
+                    <div class="detail-item">
+                        <strong>🎮 Username Game</strong>
+                        ${request.username || 'Chưa có'}
+                    </div>
+                    <div class="detail-item">
+                        <strong>📧 Email</strong>
+                        ${request.email || 'Chưa có'}
+                    </div>
+                    <div class="detail-item">
+                        <strong>🔐 MẬT KHẨU GAME</strong>
+                        <span style="color: #ff6b6b; font-weight: bold; font-size: 1.1em;">
+                            ${request.password || 'Chưa có'}
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>💻 Thiết bị</strong>
+                        ${request.device || 'Chưa xác định'}
+                    </div>
+                    <div class="detail-item">
+                        <strong>📅 Thời gian</strong>
+                        ${request.date} ${request.time}
+                    </div>
+                    <div class="detail-item" style="grid-column: span 2;">
+                        <strong>📝 Ghi chú</strong>
+                        <div style="margin-top: 8px; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 8px; border-left: 4px solid #ffd700;">
+                            ${request.note || 'Không có ghi chú'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detailModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        function renderRequests() {
+            const grid = document.getElementById('requestsGrid');
+            
+            if (allRequests.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-users"></i></div>
+                        <h2>Chưa có ai đăng ký làm Admin</h2>
+                        <p>Chờ người chơi gửi yêu cầu...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = allRequests.map(request => `
+                <div class="request-card">
+                    <div class="status-badge status-${request.status}">
+                        ${request.status === 'pending' ? '⏳ Chờ duyệt' : 
+                          request.status === 'approved' ? '✅ Đã duyệt' : '❌ Từ chối'}
+                    </div>
+                    
+                    <div class="images-row">
+                        <div class="image-container">
+                            <img src="${request.avatar || ''}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjExMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPkNo4buTYnQgZOG7h2k8L3RleHQ+PC9zdmc+'"
+                                 alt="👤 Chân dung">
+                            <div class="image-label">👤 CHÂN DUNG</div>
+                        </div>
+                        <div class="image-container">
+                            <img src="${request.cccd_image || ''}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjExMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPkNQQ0QgS8O0bmc8L3RleHQ+PC9zdmc+'"
+                                 alt="🆔 CCCD">
+                            <div class="image-label">🆔 CCCD</div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-info">
+                        <h3><i class="fas fa-user-crown"></i> ${request.fullname}</h3>
+                        <div class="info-grid">
+                            <div class="info-item"><i class="fas fa-id-card info-icon"></i><strong>CCCD:</strong> ${request.cccd}</div>
+                            <div class="info-item"><i class="fas fa-phone info-icon"></i><strong>SĐT:</strong> ${request.phone}</div>
+                            <div class="info-item"><i class="fas fa-user-tag info-icon"></i><strong>Username:</strong> ${request.username}</div>
+                            <div class="info-item"><i class="fas fa-envelope info-icon"></i><strong>Email:</strong> ${request.email}</div>
+                            <div class="info-item"><i class="fas fa-laptop info-icon"></i><strong>Device:</strong> ${request.device}</div>
+                            <div class="info-item"><i class="fas fa-clock info-icon"></i><strong>Thời gian:</strong> ${request.date} ${request.time}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <!-- 🆕 NÚT XEM CHI TIẾT -->
+                        <button class="btn-action btn-detail" onclick="showDetail('${request.id}')">
+                            <i class="fas fa-eye"></i> XEM CHI TIẾT
+                        </button>
+                        
+                        ${request.status === 'pending' ? `
+                            <button class="btn-action btn-approve" onclick="updateStatus('${request.id}', 'approved')">
+                                <i class="fas fa-check-circle"></i> PHÊ DUYỆT
+                            </button>
+                            <button class="btn-action btn-reject" onclick="updateStatus('${request.id}', 'rejected')">
+                                <i class="fas fa-times-circle"></i> TỪ CHỐI
+                            </button>
+                        ` : request.status === 'approved' ? `
+                            <button class="btn-action btn-approve" disabled><i class="fas fa-check-circle"></i> ✅ ĐÃ DUYỆT</button>
+                            <button class="btn-action btn-delete" onclick="revokeAdmin('${request.id}')"><i class="fas fa-crown-slash"></i> HỦY</button>
+                        ` : `
+                            <button class="btn-action btn-reject" disabled><i class="fas fa-times-circle"></i> ❌ TỪ CHỐI</button>
+                            <button class="btn-action btn-delete" onclick="deleteRequest('${request.id}')"><i class="fas fa-trash"></i> XÓA</button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStatus(id, status) {
+            const request = allRequests.find(r => r.id == id);
+            if (request && request.status !== 'approved') {
+                request.status = status;
+                saveRequests();
+                renderRequests();
+                updateStats();
+                showNotification(status === 'approved' ? '✅ Đã phê duyệt!' : '❌ Đã từ chối!');
+            }
+        }
+
+        function saveRequests() {
+            localStorage.setItem('adminRequests', JSON.stringify(allRequests));
+        }
+
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `position:fixed;top:30px;right:30px;background:rgba(72,187,120,0.95);color:white;padding:20px 30px;border-radius:15px;font-weight:600;z-index:10001;`;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        setInterval(loadRequests, 5000);
+    </script>
+</body>
+</html>

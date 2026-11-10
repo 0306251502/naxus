@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký Admin - Fantasy Game ⚔️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/register.css">
+
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-sword"></i>
+            <h1>Fantasy Admin</h1>
+            <p>Đăng ký với CCCD & Ảnh chân dung</p>
+        </div>
+
+        <form id="registerForm">
+          
+            <div class="form-group">
+                
+                <label for="fullname"><i class="fas fa-user"></i> Họ tên đầy đủ</label>
+                <input type="text" id="fullname" name="fullname" required>
+            </div>
+
+            <div class="form-group">
+                
+                <label for="cccd"><i class="fas fa-id-card"></i> Số CCCD (12 số)</label>
+                <input type="text" id="cccd" name="cccd" maxlength="12" required>
+            </div>
+
+            <div class="form-group">
+               
+                <label for="phone"><i class="fas fa-phone"></i> Số điện thoại (10 số)</label>
+                 <input type="tel" id="phone" name="phone" required>
+            </div>
+
+   
+            <div class="form-group">
+               
+                <label for="username"><i class="fas fa-user-tag"></i> Username</label>
+                 <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                
+                <label for="password"><i class="fas fa-lock"></i> Mật khẩu (≥6 ký tự)</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                
+                <label for="repassword"><i class="fas fa-lock-open"></i> Xác nhận mật khẩu</label>
+                <input type="password" id="repassword" name="repassword" required>
+            </div><br>
+
+
+        
+            <div class="file-upload-area">
+                <div class="file-upload" onclick="document.getElementById('avatar').click()">
+                    <i class="fas fa-camera" id="cameraIcon"></i>
+                    <div class="upload-text" id="uploadText">Chọn ảnh chân dung</div>
+                    <div class="upload-hint">PNG/JPG, < 5MB</div>
+                    <img id="avatarPreview" class="avatar-preview" alt="Preview">
+                </div>
+                <input type="file" id="avatar" accept="image/*" required>
+
+            </div><br>
+
+    
+            <div class="file-upload-area">
+               
+                <div class="file-upload" onclick="document.getElementById('cccdImage').click()">
+                    <i class="fas fa-id-card" id="cccdCameraIcon"></i>
+                    <div class="upload-text" id="cccdUploadText">📸 Chọn ảnh CCCD</div>
+                    <div class="upload-hint">Chụp rõ 12 số CCCD, < 5MB</div>
+                    <img id="cccdPreview" class="avatar-preview" alt="CCCD Preview">
+                </div>
+                 <input type="file" id="cccdImage" accept="image/*" required>
+            </div>
+
+  
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">📤 Gửi yêu cầu Admin</span>
+                <span id="spinner" class="spinner" style="display: none;"></span>
+            </button>
+        </form>
+
+        <div id="message" class="message"></div>
+        <div class="back-link">
+            <a href="login.html"><i class="fas fa-arrow-left"></i> Quay về đăng nhập</a>
+        </div>
+    </div>
+<script>
+   
+        const form = document.getElementById('registerForm');
+        const avatarInput = document.getElementById('avatar');
+        const cccdImageInput = document.getElementById('cccdImage');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const cccdPreview = document.getElementById('cccdPreview');
+        const cameraIcon = document.getElementById('cameraIcon');
+        const cccdCameraIcon = document.getElementById('cccdCameraIcon');
+        const uploadText = document.getElementById('uploadText');
+        const cccdUploadText = document.getElementById('cccdUploadText');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+
+     
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.size <= 5 * 1024 * 1024) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.style.display = 'block';
+                    cameraIcon.style.display = 'none';
+                    uploadText.textContent = '✅ Đã chọn ảnh';
+                    uploadText.style.color = '#48bb78';
+                };
+                reader.readAsDataURL(file);
+            } else if (file) {
+                showMessage('❌ Ảnh chân dung phải < 5MB!', 'error');
+                this.value = '';
+            }
+        });
+
+   
+        cccdImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.size <= 5 * 1024 * 1024) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    cccdPreview.src = e.target.result;
+                    cccdPreview.style.display = 'block';
+                    cccdCameraIcon.style.display = 'none';
+                    cccdUploadText.textContent = '✅ Đã chọn CCCD';
+                    cccdUploadText.style.color = '#48bb78';
+                };
+                reader.readAsDataURL(file);
+            } else if (file) {
+                showMessage('❌ Ảnh CCCD phải < 5MB!', 'error');
+                this.value = '';
+            }
+        });
+
+       
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('🚀 Form submitted!');
+
+            setLoading(true);
+
+            try {
+                const formData = {
+                    fullname: document.getElementById('fullname').value.trim(),
+                    cccd: document.getElementById('cccd').value.trim().replace(/\D/g, ''),
+                    phone: document.getElementById('phone').value.trim().replace(/\D/g, ''),
+                    username: document.getElementById('username').value.trim(),
+                    password: document.getElementById('password').value,
+                    repassword: document.getElementById('repassword').value
+                };
+
+                if (!validateForm(formData)) {
+                    setLoading(false);
+                    return;
+                }
+
+                const avatarFile = avatarInput.files[0];
+                if (!avatarFile) {
+                    showMessage('❌ Vui lòng chọn ảnh chân dung!', 'error');
+                    setLoading(false);
+                    return;
+                }
+                const compressedAvatar = await compressImage(avatarFile, 300, 0.7);
+
+                const cccdFile = cccdImageInput.files[0];
+                if (!cccdFile) {
+                    showMessage('❌ Vui lòng chọn ảnh CCCD!', 'error');
+                    setLoading(false);
+                    return;
+                }
+                const compressedCCCD = await compressImage(cccdFile, 400, 0.8);
+
+                await saveRequest(formData, compressedAvatar, compressedCCCD);
+
+                showMessage('✅ Gửi thành công! Chờ Master phê duyệt...', 'success');
+                
+         
+                form.reset();
+                avatarPreview.style.display = cccdPreview.style.display = 'none';
+                cameraIcon.style.display = cccdCameraIcon.style.display = 'block';
+                uploadText.textContent = 'Chọn ảnh chân dung'; 
+                uploadText.style.color = '';
+                cccdUploadText.textContent = '📸 Chọn ảnh CCCD'; 
+                cccdUploadText.style.color = '';
+
+                setTimeout(() => window.location.href = 'login.html', 2500);
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showMessage(`❌ ${error.message}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+
+        function validateForm(data) {
+            const checks = [
+                [data.fullname.length >= 2, `Họ tên phải ≥ 2 ký tự`],
+                [data.cccd.length === 12, `CCCD phải đúng 12 số`],
+                [data.phone.length === 10, `SĐT phải 10 số`],
+                [data.username.length >= 4, `Username phải ≥ 4 ký tự`],
+                [data.password.length >= 6, `Mật khẩu phải ≥ 6 ký tự`],
+                [data.password === data.repassword, 'Mật khẩu không khớp']
+            ];
+            for (let [valid, message] of checks) {
+                if (!valid) {
+                    showMessage(`❌ ${message}!`, 'error');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        async function isDuplicate(data) {
+            try {
+                const requests = getStoredRequests();
+                return requests.some(r => r.cccd === data.cccd || r.username.toLowerCase() === data.username.toLowerCase());
+            } catch (e) { return false; }
+        }
+
+        async function compressImage(file, maxWidth = 300, quality = 0.7) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.onload = () => {
+                    const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
+                    canvas.width = img.width * ratio;
+                    canvas.height = img.height * ratio;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressed = canvas.toDataURL('image/jpeg', quality);
+                    console.log(`📸 Compressed: ${Math.round(file.size / 1024)}KB → ${Math.round((compressed.length * 0.75) / 1024)}KB`);
+                    resolve(compressed);
+                };
+                img.onerror = () => reject(new Error('Lỗi xử lý ảnh'));
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        async function saveRequest(data, avatar, cccd_image) {
+            try {
+                console.log('💾 Saving to MASTER-ADMIN...');
+                let requests = getStoredRequests();
+
+                const newRequest = {
+                    id: Date.now() + Math.random(),
+                    ...data,
+                    email: data.username + '@fantasygame.com',
+                    avatar: avatar,
+                    cccd_image: cccd_image,
+                    device: navigator.userAgent.slice(0, 50),
+                    ip: 'client-side',
+                    date: new Date().toLocaleDateString('vi-VN'),
+                    time: new Date().toLocaleTimeString('vi-VN'),
+                    status: 'pending'
+                };
+
+                console.log('📋 NEW REQUEST:', newRequest); // 🔥 DEBUG
+
+                requests.unshift(newRequest);
+                requests = requests.slice(0, 20);
+
+                // 🔥 SAVE WITH RETRY
+                const maxRetries = 3;
+                for (let i = 0; i < maxRetries; i++) {
+                    try {
+                        localStorage.setItem('adminRequests', JSON.stringify(requests));
+                        console.log(`✅ SAVED TO MASTER! Total: ${requests.length}`);
+                        console.table(newRequest);
+                        return;
+                    } catch (e) {
+                        console.warn(`⚠️ Save attempt ${i + 1} failed:`, e);
+                        if (e.name === 'QuotaExceededError' || e.code === 22) {
+                            // Giảm size images
+                            requests.forEach((req, index) => {
+                                if (index > 0) {
+                                    req.avatar = 'image_removed';
+                                    req.cccd_image = 'image_removed';
+                                }
+                            });
+                        }
+                    }
+                }
+                throw new Error('Không đủ dung lượng localStorage!');
+                
+            } catch (error) {  // ✅ FIX: "check" → "catch"
+                console.error('💥 Save failed:', error);
+                throw new Error(`Lưu thất bại: ${error.message}`);
+            }
+        }
+
+        // 🔥 GET REQUESTS (GIỮ NGUYÊN)
+        function getStoredRequests() {
+            try {
+                const data = localStorage.getItem('adminRequests');
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error('Error reading storage:', e);
+                localStorage.removeItem('adminRequests');
+                return [];
+            }
+        }
+
+        // ⚙️ UTILITIES (GIỮ NGUYÊN)
+        function setLoading(loading) {
+            submitBtn.disabled = loading;
+            spinner.style.display = loading ? 'inline-block' : 'none';
+            btnText.style.display = loading ? 'none' : 'inline';
+            btnText.textContent = loading ? 'Đang xử lý...' : '📤 Gửi yêu cầu Admin';
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', type === 'success' ? 4000 : 5000);
+        }
+
+        // 🧪 DEBUG
+        console.log('🔥 ADMIN REG v4.0 - FIXED!');
+        console.log('📊 Current:', getStoredRequests().length, 'requests');
+    </script>
+</html>

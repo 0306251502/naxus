@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AN • Trung tâm an ninh | NEXUS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080d1b;--panel:#111a2d;--line:#263653;--text:#eaf1ff;--muted:#94a6c4;--cyan:#67e8f9;--gold:#f7c96b;--green:#61e6a8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#20345a 0,transparent 40%),radial-gradient(ellipse at 90% 20%,#30204f 0,transparent 32%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px clamp(18px,5vw,70px);border-bottom:1px solid #ffffff18;background:#081020bd;backdrop-filter:blur(16px);position:sticky;top:0;z-index:5}
+.brand{font:800 18px Orbitron;color:var(--gold);letter-spacing:2px}.brand span{color:var(--cyan)}a{color:var(--cyan);text-decoration:none}.back{border:1px solid var(--line);padding:10px 15px;border-radius:12px}
+main{max-width:1120px;margin:42px auto;padding:0 20px}.eyebrow{color:var(--cyan);font-size:12px;letter-spacing:3px;font-weight:800}.hero h1{font:800 clamp(30px,5vw,54px) Orbitron;margin:12px 0}.hero p{color:var(--muted);max-width:760px;line-height:1.8}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:28px}.card{background:linear-gradient(145deg,#15223aee,#0d1527ee);border:1px solid var(--line);border-radius:22px;padding:25px;box-shadow:0 20px 60px #0005}.card h2{font:700 18px Orbitron;margin:0 0 16px}.tag{display:inline-flex;padding:7px 10px;border-radius:30px;background:#123b43;color:var(--cyan);font-size:12px;font-weight:700}
+ul{padding-left:20px;color:#bdcbe0;line-height:1.9}.consent{display:flex;gap:12px;align-items:flex-start;padding:15px;background:#0b1426;border:1px solid var(--line);border-radius:14px;margin:16px 0;color:#c6d3e8;line-height:1.6}.consent input{margin-top:5px;accent-color:#67e8f9}
+button{border:0;border-radius:12px;padding:13px 18px;background:linear-gradient(110deg,#67e8f9,#7c8cff);color:#07111f;font-weight:800;cursor:pointer;transition:.2s}button:hover{transform:translateY(-2px);filter:brightness(1.08)}button.secondary{background:#1c2b45;color:#dce8fa;border:1px solid #354967}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.status{margin-top:14px;color:var(--green);min-height:24px}.data{display:grid;grid-template-columns:1fr 1fr;gap:10px}.item{padding:13px;border:1px solid #263653;border-radius:13px;background:#0b1426;min-width:0}.item small{display:block;color:var(--muted);margin-bottom:6px}.item strong{font-size:13px;overflow-wrap:anywhere}
+.notice{border-left:3px solid var(--gold);padding:12px 15px;background:#2a2417;color:#ead8ad;border-radius:8px;line-height:1.6;margin-top:16px;font-size:13px}
+.sessions{margin-top:20px}.session{padding:14px;border:1px solid var(--line);border-radius:12px;margin-top:10px;color:#c8d6eb;font-size:13px}
+footer{text-align:center;color:#687b9c;padding:35px 15px;font-size:12px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}header{padding:16px 18px}.data{grid-template-columns:1fr 1fr}}@media(max-width:420px){.data{grid-template-columns:1fr}.actions button{width:100%}}
+</style></head>
+<body>
+<header><div class="brand">NEXUS <span>/ SECURITY</span></div><a class="back" href="panel-admin.html">← Master Panel</a></header>
+<main>
+<section class="hero"><div class="eyebrow">AN • TRUST & SAFETY</div><h1>Trung tâm an ninh</h1><p>Kiểm tra thông tin phiên truy cập phục vụ thử nghiệm bảo mật. Người tham gia được xem rõ dữ liệu nào sẽ được ghi nhận và chủ động cấp quyền vị trí.</p></section>
+<div class="grid">
+<section class="card"><span class="tag">01 / MINH BẠCH DỮ LIỆU</span><h2 style="margin-top:16px">Thông tin sẽ ghi nhận</h2>
+<ul><li>Trình duyệt, hệ điều hành suy đoán, ngôn ngữ.</li><li>Kích thước màn hình, múi giờ, trạng thái kết nối.</li><li>Thời điểm và mã phiên ngẫu nhiên.</li><li>GPS chỉ khi người thử nghiệm bấm nút và chấp thuận hộp thoại của trình duyệt.</li></ul>
+<div class="notice">Không đọc cookie, mật khẩu, LocalStorage/SessionStorage của người dùng; không dò IP nội bộ hoặc tạo dấu vân tay thiết bị. Bản demo lưu cục bộ trên trình duyệt đang mở.</div>
+</section>
+<section class="card"><span class="tag">02 / QUYỀN CỦA NGƯỜI THỬ</span><h2 style="margin-top:16px">Bắt đầu kiểm tra</h2>
+<label class="consent"><input id="agree" type="checkbox"><span>Tôi đã đọc thông báo và đồng ý lưu bộ thông tin kỹ thuật cơ bản của phiên thử nghiệm này trên trình duyệt.</span></label>
+<div class="actions"><button id="capture" disabled>Ghi nhận phiên thử</button><button class="secondary" id="gps" disabled>Cho phép lấy GPS</button></div><div class="status" id="status" role="status">Đang chờ sự đồng ý.</div>
+</section></div>
+<section class="card" style="margin-top:20px"><span class="tag">03 / PHIÊN HIỆN TẠI</span><h2 style="margin-top:16px">Thông tin kỹ thuật</h2><div class="data" id="details"><div class="item"><small>Trạng thái</small><strong>Chưa ghi nhận</strong></div></div><div class="sessions"><h2>Lịch sử thử nghiệm trên máy này</h2><div id="history">Chưa có phiên nào.</div></div><div class="actions" style="margin-top:18px"><button class="secondary" id="export">Xuất báo cáo JSON</button><button class="secondary" id="erase">Xóa dữ liệu thử nghiệm</button></div></section>
+</main><footer>NEXUS • AN SECURITY LAB — Demo có sự đồng ý, không thay thế hệ thống bảo mật máy chủ.</footer>
+<script>
+const $=id=>document.getElementById(id), KEY='nexus_an_sessions_v1';
+const sessions=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}};
+$('agree').addEventListener('change',e=>{$('capture').disabled=!e.target.checked;$('gps').disabled=!e.target.checked;$('status').textContent=e.target.checked?'Đã đồng ý. Bạn có thể bắt đầu kiểm tra.':'Đang chờ sự đồng ý.'});
+function render(s){
+ const rows=[['Mã phiên',s.id],['Thời điểm',new Date(s.time).toLocaleString('vi-VN')],['Trình duyệt',s.browser],['Nền tảng',s.platform],['Ngôn ngữ',s.language],['Màn hình',s.screen],['Khung nhìn',s.viewport],['Múi giờ',s.timezone],['Số lõi CPU (nếu trình duyệt cung cấp)',s.cores],['Kết nối',s.network],['GPS',s.gps||'Chưa cấp quyền']];
+ $('details').innerHTML=rows.map(([k,v])=>`<div class="item"><small>${k}</small><strong></strong></div>`).join('');
+ [...$('details').children].forEach((el,i)=>el.querySelector('strong').textContent=rows[i][1]);
+ $('history').innerHTML=sessions().slice().reverse().map(x=>`<div class="session">${new Date(x.time).toLocaleString('vi-VN')} · ${x.id} · GPS: ${x.gps?'Đã cấp':'Không có'}</div>`).join('')||'Chưa có phiên nào.';
+}
+$('capture').onclick=()=>{if(!$('agree').checked)return;const n=navigator;const s={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),time:new Date().toISOString(),browser:n.userAgent,platform:n.userAgentData?.platform||n.platform||'Không cung cấp',language:n.language||'N/A',screen:`${screen.width}×${screen.height} (${screen.colorDepth}-bit)`,viewport:`${innerWidth}×${innerHeight}`,timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,cores:n.hardwareConcurrency||'Không cung cấp',network:n.connection?.effectiveType||'Không cung cấp',gps:null};const a=sessions();a.push(s);localStorage.setItem(KEY,JSON.stringify(a.slice(-100)));render(s);$('status').textContent='Đã ghi nhận. Dữ liệu đang lưu trên trình duyệt này.';};
+$('gps').onclick=()=>{if(!$('agree').checked)return;if(!navigator.geolocation){$('status').textContent='Trình duyệt không hỗ trợ GPS.';return;}$('status').textContent='Đang chờ bạn cấp quyền vị trí…';navigator.geolocation.getCurrentPosition(pos=>{const a=sessions();if(!a.length)return;const last=a[a.length-1];last.gps={latitude:Number(pos.coords.latitude.toFixed(5)),longitude:Number(pos.coords.longitude.toFixed(5)),accuracy:Math.round(pos.coords.accuracy)};localStorage.setItem(KEY,JSON.stringify(a));render(last);$('status').textContent='Đã lưu tọa độ GPS theo quyền bạn vừa cấp.';},err=>$('status').textContent='Không lấy được GPS: '+err.message,{enableHighAccuracy:false,timeout:10000,maximumAge:60000});};
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify(sessions(),null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='nexus-an-report.json';a.click();URL.revokeObjectURL(url);};
+$('erase').onclick=()=>{if(confirm('Xóa toàn bộ lịch sử AN trên trình duyệt này?')){localStorage.removeItem(KEY);$('details').innerHTML='';$('history').textContent='Chưa có phiên nào.';$('status').textContent='Đã xóa dữ liệu demo.';}};
+render(sessions().at(-1)||{id:'—',time:new Date().toISOString(),browser:'—',platform:'—',language:'—',screen:'—',viewport:'—',timezone:'—',cores:'—',network:'—',gps:null});
+</script></body></html>

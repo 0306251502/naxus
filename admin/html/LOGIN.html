@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Đăng nhập - Fantasy Game</title>
+    <link rel="stylesheet" href="../css/login.css">
+ 
+</head>
+<body>
+    <div class="form-container">
+        <div class="logo">⚔️</div>
+        <h1 class="title">Fantasy Game</h1>
+        <p class="subtitle">Đăng nhập để bắt đầu hành trình</p>
+        
+        <form id="loginForm" autocomplete="off">
+            <div class="input-group">
+                <label>🎮 Username:</label>
+                <input type="text" id="username" placeholder="Nhập username" required>
+            </div>
+            <div class="input-group">
+                <label>🔒 Mật khẩu:</label>
+                <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
+            <button type="submit">🚀 VÀO GAME</button>
+        </form>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="admin-links">
+            <a href="register-admin.html">
+                👤 Đăng ký Admin<br>
+                <small>(CCCD + Ảnh)</small>
+            </a>
+            <a href="approve-admin.html">
+                🔐 Master Panel<br>
+                <small>FANTASY2024ADMIN</small>
+            </a>
+        </div>
+    </div>
+
+  <script>
+    let passwordVisible = false;
+    
+    function togglePassword(event) {
+        const passwordInput = document.getElementById('password');
+        passwordVisible = !passwordVisible;
+        passwordInput.type = passwordVisible ? 'text' : 'password';
+        event.target.textContent = passwordVisible ? '🙈' : '👁️';
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+        const message = document.getElementById('message');
+        
+        message.style.display = 'none';
+        setLoading(true);
+        
+        if (!username || !password) {
+            setLoading(false);
+            return showMessage('Vui lòng nhập đầy đủ thông tin!', 'error');
+        }
+        
+        try {
+  
+            const requests = JSON.parse(localStorage.getItem('adminRequests') || '[]');
+            console.log('🔍 Tìm trong', requests.length, 'requests');
+            
+        
+            const approvedAdmin = requests.find(r => 
+                r.status === 'approved' && 
+                r.username.toLowerCase() === username && 
+                r.password === password
+            );
+            
+            console.log('✅ Approved admin found:', approvedAdmin ? approvedAdmin.username : 'KHÔNG TÌM THẤY');
+            
+            if (approvedAdmin) {
+      
+                if (approvedAdmin.status !== 'approved') {
+                    setLoading(false);
+                    return showMessage('❌ Quyền Admin của bạn đã bị thu hồi!', 'error');
+                }
+                
+
+                localStorage.setItem('currentAdmin', JSON.stringify(approvedAdmin));
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userRole', 'admin');
+                localStorage.setItem('adminSession', Date.now().toString());
+                
+                console.log('🎉 ADMIN LOGIN OK:', approvedAdmin.username);
+                showMessage(`👑 Chào Admin ${approvedAdmin.fullname}! Panel loading...`, 'success', 'admin.html');
+                return;
+            }
+            
+    
+            try {
+                const users = JSON.parse(localStorage.getItem('gameUsers') || '[]');
+                const user = users.find(u => 
+                    u.username.toLowerCase() === username && 
+                    u.password === password
+                );
+                
+                if (user) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('userRole', 'user');
+                    showMessage(`🎉 Chào ${user.playerName || username}! Vào game...`, 'success', 'game-dashboard.html');
+                    return;
+                }
+            } catch(e) {
+                console.log('Không có game users');
+            }
+            
+            setLoading(false);
+            showMessage('❌ Username hoặc mật khẩu không đúng!', 'error');
+            
+        } catch (error) {
+            setLoading(false);
+            console.error('Login error:', error);
+            showMessage('❌ Lỗi hệ thống! Thử lại.', 'error');
+        }
+    });
+    
+    function setLoading(loading) {
+        const btn = document.querySelector('button[type="submit"]');
+        const inputs = document.querySelectorAll('input');
+        if (loading) {
+            btn.innerHTML = '⏳ ĐANG KIỂM TRA...';
+            btn.disabled = true;
+            inputs.forEach(input => input.disabled = true);
+        } else {
+            btn.innerHTML = '🚀 VÀO GAME';
+            btn.disabled = false;
+            inputs.forEach(input => input.disabled = false);
+        }
+    }
+    
+    function showMessage(text, type, redirect = null) {
+        const message = document.getElementById('message');
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = 'block';
+        
+        if (redirect && type === 'success') {
+            setTimeout(() => {
+                window.location.href = redirect;
+            }, 1500);
+        }
+    }
+    
+   
+    window.onload = function() {
+        console.log('🚀 FANTASY LOGIN v2.0');
+        const requests = JSON.parse(localStorage.getItem('adminRequests') || '[]');
+        const approved = requests.filter(r => r.status === 'approved');
+        console.log('📊 Approved Admins ready:', approved.length);
+        console.table(approved.map(r => ({username: r.username, status: r.status})));
+    };
+</script>
+</body>
+</html>

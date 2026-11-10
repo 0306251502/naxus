@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛡️ ADMIN PANEL - Fantasy Game</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-container">
+    <h1 id="adminTitle">🛡️ ADMIN PANEL - FANTASY USERS</h1>
+    
+    <div class="stats-bar">
+      <div class="stat-card">
+        <span class="stat-number" id="tongUser">0</span>
+        Tổng Users
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="activeUsers">0</span>
+        Đã kích hoạt
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="pendingUsers">0</span>
+        Chờ kích hoạt
+      </div>
+    </div>
+    
+    <button class="refresh-btn" onclick="taiLaiDuLieu()">
+      🔄 TẢI LẠI DỮ LIỆU
+    </button>
+    
+    <table id="bangUser">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên nhân vật</th>
+          <th>Email</th>
+          <th>Mật khẩu</th>
+          <th>Ngày tạo</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="dsUser"></tbody>
+    </table>
+  </div>
+  <script>
+    function hienThiBang() {
+      try {
+        const users = JSON.parse(localStorage.getItem('usersFantasy') || '[]');
+        const tbody = document.getElementById('dsUser');
+        const tong = document.getElementById('tongUser');
+        const active = document.getElementById('activeUsers');
+        const pending = document.getElementById('pendingUsers');
+        const activeCount = users.filter(u => u.trangThai === 'Đã kích hoạt').length;
+        const pendingCount = users.filter(u => u.trangThai === 'Chưa kích hoạt').length;  
+        tong.textContent = users.length;
+        active.textContent = activeCount;
+        pending.textContent = pendingCount;
+        tbody.innerHTML = '';
+        users.forEach(user => {
+          const row = tbody.insertRow();
+          row.innerHTML = `
+            <td style="font-family: monospace; font-weight: bold; color: #ffd700;">${user.id}</td>
+            <td style="color: #e8f4fd;">${user.ten}</td>
+            <td style="color: #e8f4fd;">${user.email}</td>
+            <td style="color: #00ff88; font-family: monospace; letter-spacing: 1px; font-weight: bold;">${user.matkhau}</td>
+            <td style="color: #a0a0ff; font-size: 0.9em;">${user.ngayTao}</td>
+            <td class="${user.trangThai === 'Chưa kích hoạt' ? 'status-pending' : 'status-active'}">
+              <strong>${user.trangThai}</strong>
+            </td>
+            <td>
+              <button class="kich-hoat-btn action-btn" onclick="kichHoatUser(${user.id})">
+                ${user.trangThai === 'Chưa kích hoạt' ? '✅ KÍCH HOẠT' : '❌ HỦY'}
+              </button>
+              <button class="xoa-btn action-btn" onclick="xoaUser(${user.id})">🗑️ Xóa</button>
+              <button class="chi-tiet-btn action-btn" onclick="xemChiTiet(${user.id})">👁️ Chi tiết</button>
+            </td>
+          `;
+        });
+      } catch(e) {
+        console.error('Lỗi hiển thị bảng:', e);
+      }
+    }
+    
+    // 2. KÍCH HOẠT USER
+    function kichHoatUser(id) {
+      let users = JSON.parse(localStorage.getItem('usersFantasy') || '[]');
+      const userIndex = users.findIndex(u => u.id == id);
+      if (userIndex !== -1) {
+        const newStatus = users[userIndex].trangThai === 'Chưa kích hoạt' ? 'Đã kích hoạt' : 'Chưa kích hoạt';
+        users[userIndex].trangThai = newStatus;
+        localStorage.setItem('usersFantasy', JSON.stringify(users));
+        hienThiBang();
+        alert(`✅ ${users[userIndex].ten}: ${newStatus}`);
+      }
+    }
+    
+    // 3. XÓA USER
+    function xoaUser(id) {
+      if (confirm('🗑️ Xác nhận xóa?')) {
+        let users = JSON.parse(localStorage.getItem('usersFantasy') || '[]');
+        users = users.filter(u => u.id != id);
+        localStorage.setItem('usersFantasy', JSON.stringify(users));
+        hienThiBang();
+        alert('✅ Đã xóa!');
+      }
+    }
+    function xemChiTiet(id) {
+      const users = JSON.parse(localStorage.getItem('usersFantasy') || '[]');
+      const user = users.find(u => u.id == id);
+      if (!user) return alert('❌ Không tìm thấy!');
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h2>👤 ${user.ten}</h2>
+          <div style="line-height:1.8;">
+            <div><strong>ID:</strong> <code style="color:#ffd700;">${user.id}</code></div>
+            <div><strong>Email:</strong> <span style="color:#00ff88;">${user.email}</span></div>
+            <div><strong>Mật khẩu:</strong> <code style="color:#ff6b6b; font-weight:bold;">${user.matkhau}</code></div>
+            <div><strong>Trạng thái:</strong> <span style="color:${user.trangThai==='Đã kích hoạt'?'#00ff88':'#ffd700'}; font-weight:bold;">${user.trangThai}</span></div>
+            <div><strong>Browser:</strong> ${navigator.userAgent.slice(0,60)}${navigator.userAgent.length>60?'...' : ''}</div>
+          </div>
+          <button class="close-modal-btn" onclick="this.parentElement.parentElement.remove()">❌ ĐÓNG</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.onclick = (e) => e.target === modal && modal.remove();
+    }
+    function taiLaiDuLieu() {
+      hienThiBang();
+      alert('✅ Đã tải lại dữ liệu mới nhất!');
+    }
+    window.onload = function() {
+      console.log('🚀 ADMIN PANEL v2.0 - LOADING...');
+      
+      if (localStorage.getItem('userRole') !== 'admin') {
+        alert('❌ Không có quyền Admin!');
+        localStorage.clear();
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      console.log('✅ ADMIN XÁC THỰC OK!');
+      hienThiBang();
+      document.getElementById('adminTitle').innerHTML += ' | 👑 Đăng nhập thành công';
+    };
+    window.hienThiBang = hienThiBang;
+    window.kichHoatUser = kichHoatUser;
+    window.xoaUser = xoaUser;
+    window.xemChiTiet = xemChiTiet;
+    window.taiLaiDuLieu = taiLaiDuLieu;
+  </script>
+  
+</body>
+</html>

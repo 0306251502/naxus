@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 Admin Panel - Fantasy Game</title>
+    <link rel="stylesheet" href="../css/panel-admin.css">
+
+</head>
+<body>
+  
+    <nav class="navbar">
+        <div class="logo">
+            ⚔️ <span>Fantasy Admin</span>
+        </div>
+        <div class="user-section" id="userSection">
+          
+        </div>
+    </nav>
+
+    <main class="main-container">
+   
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Tổng người chơi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👑</div>
+                <div class="stat-number" id="totalAdmins">0</div>
+                <div class="stat-label">Tổng Admin</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="pendingRequests">0</div>
+                <div class="stat-label">Yêu cầu chờ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">Tổng yêu cầu</div>
+            </div>
+        </section>
+
+        <section class="action-section">
+            <h2 class="action-title">
+                ⚡ Thao tác nhanh
+            </h2>
+            <div class="quick-actions">
+                <a href="approve-admin.html" class="quick-btn">
+                    <div class="quick-icon">✅</div>
+                    Phê duyệt Admin
+                </a>
+                <a href="approve-admin.html#approvedTab" class="quick-btn">
+                    <div class="quick-icon">🔐</div>
+                    Quản lý Admin
+                </a>
+                <button class="quick-btn" onclick="showDetailedStats()">
+                    <div class="quick-icon">📈</div>
+                    Thống kê chi tiết
+                </button>
+                <a href="AN.HTML" class="quick-btn">
+                    <div class="quick-icon">🛡️</div>
+                    Trung tâm AN
+                </a>
+                <button class="quick-btn" onclick="refreshData()">
+                    <div class="quick-icon">🔄</div>
+                    Làm mới dữ liệu
+                </button>
+            </div>
+        </section>
+
+        <section class="recent-section">
+            <div class="recent-card">
+                <h3 class="recent-title">
+                    📋 Yêu cầu mới nhất
+                </h3>
+                <div class="recent-list" id="recentRequests">
+              
+                </div>
+            </div>
+            <div class="recent-card">
+                <h3 class="recent-title">
+                    👑 Admin gần đây
+                </h3>
+                <div class="recent-list" id="recentAdmins">
+             
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+  
+        let currentAdmin = null;
+        try {
+            currentAdmin = JSON.parse(localStorage.getItem('currentAdmin'));
+            if (!currentAdmin || !currentAdmin.fullname) {
+                throw new Error('No valid admin data');
+            }
+        } catch (e) {
+            alert('❌ Bạn không có quyền truy cập Admin!');
+            window.location.href = 'login.html';
+            throw e;
+        }
+
+        function loadAdminInfo() {
+            const userSection = document.getElementById('userSection');
+            userSection.innerHTML = `
+                <img src="${currentAdmin.avatar || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0NDQ0NDQiLz4KPHRleHQgeD0iMjAiIHk9IjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjgwMCI+QTwvdGV4dD4KPC9zdmc+'}" 
+                       alt="${currentAdmin.fullname}" class="admin-avatar">
+                <div class="admin-info">
+                    <div class="admin-name">${currentAdmin.fullname}</div>
+                    <div class="admin-cccd">CCCD: ${currentAdmin.cccd}</div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Thoát</button>
+            `;
+        }
+
+        function loadDashboardData() {
+            const users = JSON.parse(localStorage.getItem('gameUsers') || '[]');
+            const admins = JSON.parse(localStorage.getItem('adminsFantasy') || '[]');
+            const requests = JSON.parse(localStorage.getItem('adminRequests') || '[]');
+
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalAdmins').textContent = admins.length;
+            document.getElementById('pendingRequests').textContent = requests.length;
+            document.getElementById('totalRequests').textContent = requests.length + admins.length;
+
+            const recentReqs = requests.slice(0, 5).map(req => `
+                <div class="recent-item">
+                    <div class="recent-info">
+                        <h4>${req.fullname}</h4>
+                        <div class="recent-meta">${req.cccd} | ${req.username}</div>
+                    </div>
+                    <a href="approve-admin.html" class="recent-link">Phê duyệt</a>
+                </div>
+            `).join('') || '<div style="text-align:center;color:#a0a0a0;padding:40px 0">Không có yêu cầu mới</div>';
+
+            document.getElementById('recentRequests').innerHTML = recentReqs;
+
+            const recentAdmins = admins.slice(0, 5).map(admin => `
+                <div class="recent-item">
+                    <div class="recent-info">
+                        <h4>${admin.fullname}</h4>
+                        <div class="recent-meta">${admin.cccd} | ${admin.approvedAt || 'N/A'}</div>
+                    </div>
+                    <span style="color:#a0a0a0;font-size:0.8em">Hoạt động</span>
+                </div>
+            `).join('') || '<div style="text-align:center;color:#a0a0a0;padding:40px 0">Chưa có Admin</div>';
+
+            document.getElementById('recentAdmins').innerHTML = recentAdmins;
+        }
+        function checkAdminStatus() {
+            const admins = JSON.parse(localStorage.getItem('adminsFantasy') || '[]');
+            const validAdmin = admins.find(a => a.id == currentAdmin.id);
+            
+            if (!validAdmin) {
+                alert('❌ Quyền Admin của bạn đã bị Master thu hồi!');
+                localStorage.removeItem('currentAdmin');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function showDetailedStats() {
+            const users = JSON.parse(localStorage.getItem('gameUsers') || '[]');
+            const admins = JSON.parse(localStorage.getItem('adminsFantasy') || '[]');
+            const requests = JSON.parse(localStorage.getItem('adminRequests') || '[]');
+            
+            const stats = `
+📊 === THỐNG KÊ CHI TIẾT ===
+
+👥 Người chơi: ${users.length}
+👑 Admin: ${admins.length} 
+⏳ Chờ duyệt: ${requests.length}
+📈 Tổng: ${users.length + admins.length + requests.length}
+
+👤 BẠN (${currentAdmin.username}):
+- Tên: ${currentAdmin.fullname}
+- CCCD: ${currentAdmin.cccd}
+- SĐT: ${currentAdmin.phone}
+- Ngày duyệt: ${currentAdmin.approvedAt || 'N/A'}
+            `;
+            alert(stats);
+        }
+
+        function refreshData() {
+            loadDashboardData();
+            checkAdminStatus();
+            alert('✅ Đã làm mới dữ liệu!');
+        }
+
+        function handleLogout() {
+            if (confirm('👋 Xác nhận đăng xuất?')) {
+                localStorage.removeItem('currentAdmin');
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('load', function() {
+            loadAdminInfo();
+            loadDashboardData();
+            checkAdminStatus();
+            
+            setInterval(() => {
+                checkAdminStatus();
+                loadDashboardData();
+            }, 20000);
+        });
+    
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+            window.history.go(1);
+        };
+    </script>
+</body>
+</html>
