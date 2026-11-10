@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 Fantasy Game - Dashboard</title>
+  <link rel="stylesheet" href="../css/game.css">
+</head>
+<body>
+  <button class="logout-btn" onclick="logout()">🚪 Đăng xuất</button>
+
+  <div class="header">
+    <div class="logo">⚔️ Fantasy Game</div>
+    <div class="user-info" id="userInfo"></div>
+  </div>
+
+  <div class="main-content">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value" id="level">1</div>
+        <div class="stat-label">Level hiện tại</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💎</div>
+        <div class="stat-value" id="points">0</div>
+        <div class="stat-label">Tổng điểm</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚔️</div>
+        <div class="stat-value" id="wins">0</div>
+        <div class="stat-label">Số trận thắng</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-value" id="rank">Bronze</div>
+        <div class="stat-label">Hạng hiện tại</div>
+      </div>
+    </div>
+
+    <div class="game-actions">
+      <div class="action-card" onclick="playGame('quest')">
+        <div class="action-icon">🗡️</div>
+        <div class="action-title">Nhiệm vụ</div>
+        <div class="action-desc">Hoàn thành nhiệm vụ hàng ngày<br>Nhận kinh nghiệm & vật phẩm</div>
+      </div>
+      <div class="action-card" onclick="playGame('tournament')">
+        <div class="action-icon">🏆</div>
+        <div class="action-title">Giải đấu</div>
+        <div class="action-desc">Tham gia giải đấu hàng tuần<br>Cạnh tranh bảng xếp hạng</div>
+      </div>
+      <div class="action-card" onclick="playGame('shop')">
+        <div class="action-icon">🛒</div>
+        <div class="action-title">Cửa hàng</div>
+        <div class="action-desc">Mua skin, vũ khí<br>Dùng điểm tích lũy</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem('userLoggedIn') !== 'true') {
+        alert('❌ Vui lòng đăng nhập!');
+        window.location.href = 'dnuser.html';
+        return;
+      }
+      
+      const currentUser = localStorage.getItem('currentUserFantasy');
+      if (!currentUser) {
+        alert('❌ Dữ liệu user không hợp lệ!');
+        window.location.href = 'dnuser.html';
+        return;
+      }
+      
+      const user = JSON.parse(currentUser);
+      loadUserDashboard(user);
+    });
+
+    function playGame(type) {
+      const actions = {
+        quest: '🗡️ Nhận nhiệm vụ mới!',
+        tournament: '🏆 Tham gia giải đấu!',
+        shop: '🛒 Mở cửa hàng!'
+      };
+      alert(actions[type] || 'Chức năng sắp ra mắt!');
+    }
+
+    function logout() {
+      if (confirm('🚪 Xác nhận đăng xuất?')) {
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('currentUserFantasy');
+        window.location.href = 'dnuser.html';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Đăng nhập - Fantasy Game</title>
+    <link rel="stylesheet" href="../css/dnuser.css">
+</head>
+<body>
+    <div class="form-box">
+        <div class="game-logo">⚔️</div>
+        <h2>Fantasy Game</h2>
+        <p class="subtitle">Đăng nhập để chơi</p>
+        
+        <form id="loginForm"  autocomplete="off">
+            <div class="input-group">
+                <label>🎮 Username:</label>
+                <input type="text" id="username" placeholder="Nhập username" required>
+            </div>
+            <div class="input-group">
+                <label>🔒 Mật khẩu:</label>
+                <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                <span class="eye" id="eyeIcon" onclick="togglePassword()">👁️</span>
+            </div>
+            
+            <button type="submit" id="loginBtn">🚀 VÀO GAME</button>
+        </form>
+        
+        <div class="message error" id="errorMsg"></div>
+        <div class="message warning" id="pendingMsg"></div>
+        <div class="message success" id="successMsg"></div>
+        
+        <div class="links">
+            <a href="../../index.html#From">📝 Đăng ký</a>
+            <a href="../../index.html">🏠 Trang chủ</a>
+        </div>
+    </div>
+
+    <script>
+      
+        function initForm() {
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const form = document.getElementById('loginForm');
+            
+           
+            username.disabled = false;
+            password.disabled = false;
+            loginBtn.disabled = false;
+            
+
+            console.log('✅ Form đã sẵn sàng!');
+        }
+
+        function togglePassword(event) {
+            event.stopPropagation();
+            const password = document.getElementById('password');
+            const eye = document.getElementById('eyeIcon');
+            
+            if (password.disabled) return; 
+            
+            password.type = password.type === 'password' ? 'text' : 'password';
+            eye.textContent = password.type === 'password' ? '👁️' : '🙈';
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            
+           
+            document.querySelectorAll('.message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            const usernameValue = username.value.trim();
+            const passwordValue = password.value;
+            
+            if (!usernameValue || !passwordValue) {
+                showMessage('error', 'Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+            
+          
+            username.disabled = true;
+            password.disabled = true;
+            loginBtn.disabled = true;
+            loginBtn.textContent = '⏳ ĐANG KIỂM TRA...';
+            
+           
+            const users = JSON.parse(localStorage.getItem('usersFantasy') || '[]');
+            const user = users.find(u => u.ten === usernameValue && u.matkhau === passwordValue);
+            
+            setTimeout(() => {
+               
+                username.disabled = false;
+                password.disabled = false;
+                loginBtn.disabled = false;
+                loginBtn.textContent = '🚀 VÀO GAME';
+                
+                if (!user) {
+                    showMessage('error', '❌ Username hoặc mật khẩu sai!');
+                    return;
+                }
+                
+                if (user.trangThai === 'Chưa kích hoạt') {
+                    showMessage('pending', 
+                        `⏳ Tài khoản <strong>${user.ten}</strong> đang chờ Admin kích hoạt!<br>` +
+                        `👨‍💼 Liên hệ admin để được kích hoạt.`
+                    );
+                    return;
+                }
+                
+        
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('currentUserFantasy', JSON.stringify(user));
+                
+                showMessage('success', 
+                    `🎉 Chào mừng <strong>${user.ten}</strong>!<br>` +
+                    `Đang vào game...`
+                );
+                
+                setTimeout(() => {
+                    window.location.href = 'game.html';
+                }, 2000);
+                
+            }, 1500);
+        });
+        
+        function showMessage(type, msg) {
+            const msgEl = document.getElementById(type + 'Msg');
+            msgEl.innerHTML = msg;
+            msgEl.style.display = 'block';
+            msgEl.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        
+        window.addEventListener('load', initForm);
+   
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔥 DOM ready - Form hoạt động bình thường');
+            initForm();
+        });
+    </script>
+</body>
+</html>
